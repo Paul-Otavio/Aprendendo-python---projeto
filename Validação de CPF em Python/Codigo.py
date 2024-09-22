@@ -1,6 +1,23 @@
+import re
+import sys
 
-# CPF enviado pelo usuário
-cpf_enviado_usuario = '74682489070'
+# Solicita a entrada do CPF ao usuário
+entrada = input('CPF [746.824.890-70]: ')
+
+# Remove todos os caracteres não numéricos da entrada do CPF
+cpf_enviado_usuario = re.sub(
+    r'[^0-9]',
+    '',
+    entrada
+)
+
+# Verifica se a entrada é uma sequência de números repetidos
+entrada_e_sequencial = entrada == entrada[0] * len(entrada)
+
+# Se a entrada for sequencial, exibe uma mensagem e encerra o programa
+if entrada_e_sequencial:
+    print('Você enviou dados sequenciais.')
+    sys.exit()
 
 # Extrai os primeiros nove dígitos do CPF
 nove_digitos = cpf_enviado_usuario[:9]
@@ -38,3 +55,4 @@ if cpf_enviado_usuario == cpf_gerado_pelo_calculo:
     print(f'{cpf_enviado_usuario} é válido')
 else:
     print('CPF inválido')
+
