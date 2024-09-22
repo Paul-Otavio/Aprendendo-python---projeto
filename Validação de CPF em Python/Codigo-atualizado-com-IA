@@ -1,0 +1,46 @@
+import re
+
+def calcular_digito(cpf, contador_regressivo):
+    resultado = 0
+    for digito in cpf:
+        resultado += int(digito) * contador_regressivo
+        contador_regressivo -= 1
+    digito = (resultado * 10) % 11
+    return digito if digito <= 9 else 0
+
+def validar_cpf(cpf):
+    # Remove caracteres não numéricos
+    cpf = re.sub(r'[^0-9]', '', cpf)
+    
+    # Verifica se o CPF tem 11 dígitos e se todos são números
+    if len(cpf) != 11 or not cpf.isdigit():
+        return False
+
+    # Verifica se todos os dígitos são iguais (sequenciais)
+    if cpf == cpf[0] * len(cpf):
+        return False
+
+    # Extrai os primeiros nove dígitos do CPF
+    nove_digitos = cpf[:9]
+
+    # Calcula o primeiro dígito verificador
+    digito_1 = calcular_digito(nove_digitos, 10)
+
+    # Calcula o segundo dígito verificador
+    dez_digitos = nove_digitos + str(digito_1)
+    digito_2 = calcular_digito(dez_digitos, 11)
+
+    # Concatena os dígitos para formar o CPF completo gerado pelo cálculo
+    cpf_gerado_pelo_calculo = f'{nove_digitos}{digito_1}{digito_2}'
+
+    # Verifica se o CPF enviado pelo usuário é válido
+    return cpf == cpf_gerado_pelo_calculo
+
+# Solicita a entrada do CPF ao usuário
+entrada = input('CPF [746.824.890-70]: ')
+
+# Valida o CPF e imprime o resultado
+if validar_cpf(entrada):
+    print(f'{entrada} é válido')
+else:
+    print('CPF inválido')
